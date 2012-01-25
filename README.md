@@ -1,3 +1,3 @@
 # Dotfiles
 
-Just some for vim and a simple script to symlink in place
+Some dotfiles for vim and a simple script to symlink in place
