@@ -14,3 +14,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set number
+set title
+set background=dark
+"colorscheme vividchalk
+colorscheme solarized
