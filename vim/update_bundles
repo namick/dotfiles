@@ -28,6 +28,8 @@ git_bundles = [
   #"git://github.com/vim-scripts/IndexedSearch.git",
   "git://github.com/vim-scripts/jQuery.git",
   "git://github.com/altercation/vim-colors-solarized.git",
+  "git://github.com/jpo/vim-railscasts-theme.git",
+  "git://github.com/commonthread/vim-vibrantink.git",
 ]
 
 require 'fileutils'

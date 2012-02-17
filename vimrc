@@ -16,5 +16,7 @@ set softtabstop=2
 set number
 set title
 set background=dark
+colorscheme vibrantink
+"colorscheme railscasts
 "colorscheme vividchalk
-colorscheme solarized
+"colorscheme solarized
