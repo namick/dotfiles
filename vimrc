@@ -17,9 +17,9 @@ set number
 set title
 set t_Co=256
 set background=dark
-colorscheme vibrantink
+"colorscheme vibrantink
 "colorscheme railscasts
-"colorscheme vividchalk
+colorscheme vividchalk
 "colorscheme solarized
 
 " Allow backspacing over everything in insert mode
@@ -62,6 +62,7 @@ map <leader>e :edit %%
 map <leader>v :view %%
 
 " Make the current window big, but leave others context
+set winwidth=5
 set winwidth=84
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
