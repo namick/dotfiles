@@ -63,12 +63,12 @@ map <leader>v :view %%
 
 " Make the current window big, but leave others context
 set winwidth=5
-set winwidth=84
+set winwidth=100
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
-set winheight=5
-set winminheight=5
+set winheight=7
+set winminheight=7
 set winheight=999
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -85,3 +85,56 @@ function! InsertTabWrapper()
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
+
+" rspec mappings
+map <Leader>a :call RunAllSpecs()<CR>
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+
+function! RunAllSpecs()
+  let l:command = "zeus rspec -fd spec"
+  call RunSpecs(l:command)
+endfunction
+
+function! RunCurrentSpecFile()
+  if InSpecFile()
+    let l:command = "zeus rspec -fd " . @%
+    call SetLastSpecCommand(l:command)
+    call RunSpecs(l:command)
+  endif
+endfunction
+
+function! RunNearestSpec()
+  if InSpecFile()
+    let l:command = "zeus rspec -fd " . " -l " . line(".") . " "  . @%
+    call SetLastSpecCommand(l:command)
+    call RunSpecs(l:command)
+  endif
+endfunction
+
+function! RunLastSpec()
+  if exists("t:last_spec_command")
+    call RunSpecs(t:last_spec_command)
+  endif
+endfunction
+
+function! InSpecFile()
+  return match(expand("%"), "_spec.rb$") != -1
+endfunction
+
+function! SetLastSpecCommand(command)
+  let t:last_spec_command = a:command
+endfunction
+
+function! RunSpecs(command)
+  execute ":w\|!clear && echo " . a:command . " && echo && " . a:command
+endfunction
+
+function! s:ChangeHashSyntax(line1,line2)
+    let l:save_cursor = getpos(".")
+    silent! execute ':' . a:line1 . ',' . a:line2 . 's/:\([a-z0-9_]\+\)\s\+=>/\1:/g'
+    call setpos('.', l:save_cursor)
+endfunction
+
+command! -range=% ChangeHashSyntax call <SID>ChangeHashSyntax(<line1>,<line2>)
