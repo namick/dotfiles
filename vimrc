@@ -1,6 +1,35 @@
-runtime bundle/pathogen/autoload/pathogen.vim
-call pathogen#infect()
-call pathogen#helptags()
+set nocompatible
+filetype off
+
+" Vundle help
+" :BundleList          - list configured bundles
+" :BundleInstall(!)    - install(update) bundles
+" :BundleSearch(!) foo - search(or refresh cache first) for foo
+" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+"
+" see :h vundle for more details or wiki for FAQ
+" NOTE: comments after Bundle command are not allowed..
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Bundle 'gmarik/vundle'
+
+Bundle 'tpope/vim-endwise'
+Bundle 'tpope/vim-git'
+Bundle 'tpope/vim-markdown'
+Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-vividchalk'
+Bundle 'vim-ruby/vim-ruby'
+Bundle 'vim-scripts/jQuery'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'jpo/vim-railscasts-theme'
+Bundle 'commonthread/vim-vibrantink'
+Bundle 'wincent/Command-T'
+
 syntax on " Enable syntax highlighting
 filetype on " Enable filetype detection
 filetype indent on " Enable filetype-specific indenting
@@ -18,8 +47,8 @@ set title
 set t_Co=256
 set background=dark
 "colorscheme vibrantink
-"colorscheme railscasts
-colorscheme vividchalk
+colorscheme railscasts
+"colorscheme vividchalk
 "colorscheme solarized
 
 " Allow backspacing over everything in insert mode
@@ -93,13 +122,15 @@ map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 
 function! RunAllSpecs()
-  let l:command = "zeus rspec -fd spec"
+  "let l:command = "zeus rspec -fd spec"
+  let l:command = "rspec -fd spec"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
-    let l:command = "zeus rspec -fd " . @%
+    "let l:command = "zeus rspec -fd " . @%
+    let l:command = "rspec -fd " . @%
     call SetLastSpecCommand(l:command)
     call RunSpecs(l:command)
   endif
@@ -107,7 +138,8 @@ endfunction
 
 function! RunNearestSpec()
   if InSpecFile()
-    let l:command = "zeus rspec -fd " . " -l " . line(".") . " "  . @%
+    "let l:command = "zeus rspec -fd " . " -l " . line(".") . " "  . @%
+    let l:command = "rspec -fd " . " -l " . line(".") . " "  . @%
     call SetLastSpecCommand(l:command)
     call RunSpecs(l:command)
   endif
