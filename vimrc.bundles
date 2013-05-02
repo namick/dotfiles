@@ -1,3 +1,5 @@
+set nocompatible
+
 filetype off
 
 " Vundle help
@@ -28,3 +30,5 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'jpo/vim-railscasts-theme'
 Bundle 'commonthread/vim-vibrantink'
 Bundle 'wincent/Command-T'
+
+filetype on
