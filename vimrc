@@ -35,7 +35,8 @@ set wildmode=longest,list
 " Make tab completion for files/buffers act like bash
 set wildmenu
 
-let mapleader=","
+" Set leader to space
+let mapleader=" "
 
 " Move around splits with <c-hjkl>
 nnoremap <c-j> <c-w>j
@@ -98,15 +99,13 @@ map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 
 function! RunAllSpecs()
-  "let l:command = "zeus rspec -fd spec"
-  let l:command = "rspec -fd spec"
+  let l:command = "bin/rspec -fd spec"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
-    "let l:command = "zeus rspec -fd " . @%
-    let l:command = "rspec -fd " . @%
+    let l:command = "bin/rspec -fd " . @%
     call SetLastSpecCommand(l:command)
     call RunSpecs(l:command)
   endif
@@ -114,8 +113,7 @@ endfunction
 
 function! RunNearestSpec()
   if InSpecFile()
-    "let l:command = "zeus rspec -fd " . " -l " . line(".") . " "  . @%
-    let l:command = "rspec -fd " . " -l " . line(".") . " "  . @%
+    let l:command = "bin/rspec -fd " . " -l " . line(".") . " "  . @%
     call SetLastSpecCommand(l:command)
     call RunSpecs(l:command)
   endif
