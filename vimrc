@@ -1,5 +1,7 @@
 set nocompatible
 
+set shell=/bin/sh
+
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
 endif
