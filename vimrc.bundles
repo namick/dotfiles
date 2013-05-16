@@ -33,5 +33,6 @@ Bundle 'commonthread/vim-vibrantink'
 Bundle 'wincent/Command-T'
 Bundle 'mileszs/ack.vim'
 Bundle 'scrooloose/syntastic'
+Bundle 'bitc/vim-bad-whitespace'
 
 filetype on

@@ -30,6 +30,11 @@
   untracked = red
   branch = green
 
+[merge]
+  tool = opendiff
+  defaultToUpstream = true
+  conflictStyle=diff3
+
 [alias]
   s = status
   g = log --graph --decorate --pretty=oneline --abbrev-commit
@@ -41,3 +46,5 @@
   dc = diff --cached
   ls = ls-files
   ign = ls-files -o -i --exclude-standard
+  ff = merge --ff-only
+
