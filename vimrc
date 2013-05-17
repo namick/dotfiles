@@ -39,12 +39,6 @@ set wildmenu
 " Set leader to space
 let mapleader=" "
 
-" Move around splits with <c-hjkl>
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-
 " Clear the search buffer when hitting return
 :nnoremap <CR> :nohlsearch<cr>
 
