@@ -36,4 +36,9 @@ Bundle 'scrooloose/syntastic'
 Bundle 'bitc/vim-bad-whitespace'
 Bundle 'christoomey/vim-tmux-navigator'
 
+" These three needed for turbux
+"Bundle 'jgdavey/vim-turbux'
+"Bundle 'tpope/vim-dispatch'
+Bundle 'benmills/vimux'
+
 filetype on

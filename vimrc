@@ -20,7 +20,8 @@ set shiftwidth=2
 set softtabstop=2
 set number
 set title
-set backupdir=/tmp
+set backupdir=/tmp/
+set directory=/tmp/
 set t_Co=256
 set background=dark
 "colorscheme vibrantink
@@ -31,7 +32,7 @@ colorscheme railscasts
 " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-" List all matches without completing, then each full match 
+" List all matches without completing, then each full match
 set wildmode=longest,list
 " Make tab completion for files/buffers act like bash
 set wildmenu
@@ -54,16 +55,16 @@ nnoremap <leader><leader> <c-^>
 " COMMAND-T MAPPINGS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Open files with <leader>f
-map <leader>f :CommandTFlush<cr>\|:CommandT<cr>
+map <leader>t :CommandTFlush<cr>\|:CommandT<cr>
 " Open files, limited to the directory of the current file, with <leader>gf
 " This requires the %% mapping found below.
-map <leader>gf :CommandTFlush<cr>\|:CommandT %%<cr>
+map <leader>gt :CommandTFlush<cr>\|:CommandT %%<cr>
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :edit %%
 map <leader>v :view %%
 
 " Make the current window big, but leave others context
-set winwidth=5
+set winwidth=7
 set winwidth=100
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
@@ -89,9 +90,12 @@ inoremap <s-tab> <c-n>
 
 " rspec mappings
 map <Leader>a :call RunAllSpecs()<CR>
-map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>f :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
+
+" Open vimux on the side
+let g:VimuxOrientation = "h"
 
 function! RunAllSpecs()
   let l:command = "rspec -fd spec"
@@ -129,7 +133,9 @@ function! SetLastSpecCommand(command)
 endfunction
 
 function! RunSpecs(command)
-  execute ":w\|!clear && echo " . a:command . " && echo && " . a:command
+  "execute ":w\|!clear && echo " . a:command . " && echo && " . a:command
+  "call VimuxRunCommand(":w\|!clear && echo " . a:command . " && echo && " . a:command)
+  call VimuxRunCommand(a:command)
 endfunction
 
 function! s:ChangeHashSyntax(line1,line2)
