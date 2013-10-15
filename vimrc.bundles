@@ -24,6 +24,7 @@ Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-vividchalk'
 Bundle 'tpope/vim-commentary'
+Bundle 'tpope/vim-fugitive'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'vim-scripts/jQuery'
 Bundle 'kchmck/vim-coffee-script'
@@ -35,6 +36,9 @@ Bundle 'mileszs/ack.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'bitc/vim-bad-whitespace'
 Bundle 'christoomey/vim-tmux-navigator'
+
+" Make (V)im play nicely with (i)Term 2 and (t)mux
+"Bundle 'sjl/vitality.vim'
 
 " These three needed for turbux
 "Bundle 'jgdavey/vim-turbux'

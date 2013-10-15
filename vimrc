@@ -18,16 +18,31 @@ set autoindent
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set number
 set title
 set backupdir=/tmp/
 set directory=/tmp/
 set t_Co=256
-set background=dark
 "colorscheme vibrantink
 colorscheme railscasts
 "colorscheme vividchalk
 "colorscheme solarized
+
+" Set a dark background after colorscheme is loaded
+set background=dark
+
+" Show characters over 100 lines
+if exists('+colorcolumn')
+  set colorcolumn=80
+else
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>100v.\+', -1)
+endif
+
+" Syntax highlighting for all spec files
+autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_behaves_like it_should_behave_like before after setup subject its shared_examples_for shared_context let
+highlight def link rubyRspec Function
+
+" Format XML docs
+au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
 
 " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -36,6 +51,10 @@ set backspace=indent,eol,start
 set wildmode=longest,list
 " Make tab completion for files/buffers act like bash
 set wildmenu
+
+" Always save everything
+set autowriteall
+autocmd FocusLost * silent! wa
 
 " Set leader to space
 let mapleader=" "
@@ -47,9 +66,47 @@ let mapleader=" "
 nnoremap <leader><leader> <c-^>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" SMASH
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map smashing j and k to exit insert mode
+inoremap jk <esc>
+inoremap kj <esc>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 :set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RELATIVE NUMBER
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set relativenumber
+
+" Toggle relative number with Ctrl-n
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set number
+  else
+    set relativenumber
+  endif
+endfunc
+
+nnoremap <C-n> :call NumberToggle()<cr>
+
+" Switch to absolute line numbers whenever Vim loses focus, since we don’t
+"   really care about the relative line numbers unless we’re moving around
+autocmd FocusLost * :set number
+autocmd FocusGained * :set relativenumber
+
+" Use absolute line numbers when we’re in insert mode
+"   and relative numbers when we’re in normal mode
+autocmd InsertEnter * :set number
+autocmd InsertLeave * :set relativenumber
+
+" Highlight cursor line in normal mode
+set cursorline
+autocmd InsertEnter * set nocursorline
+autocmd InsertLeave * set cursorline
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COMMAND-T MAPPINGS
@@ -65,7 +122,7 @@ map <leader>v :view %%
 
 " Make the current window big, but leave others context
 set winwidth=7
-set winwidth=100
+set winwidth=80
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
@@ -98,13 +155,17 @@ map <Leader>l :call RunLastSpec()<CR>
 let g:VimuxOrientation = "h"
 
 function! RunAllSpecs()
-  let l:command = "rspec -fd spec"
+  let l:command = "spring rspec"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
     let l:command = "spring rspec -fd " . @%
+    call SetLastSpecCommand(l:command)
+    call RunSpecs(l:command)
+  elseif InSpecJSFile()
+    let l:command = "spring teaspoon " . @%
     call SetLastSpecCommand(l:command)
     call RunSpecs(l:command)
   endif
@@ -126,6 +187,10 @@ endfunction
 
 function! InSpecFile()
   return match(expand("%"), "_spec.rb$") != -1
+endfunction
+
+function! InSpecJSFile()
+  return match(expand("%"), "_spec.js.coffee$") != -1
 endfunction
 
 function! SetLastSpecCommand(command)

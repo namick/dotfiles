@@ -10,6 +10,12 @@
   editor=vim
 	excludesfile = /root/.gitignore_global
 
+[push]
+  default = current
+
+[pull]
+  default = current
+
 [color]
   ui = auto
 
@@ -47,4 +53,5 @@
   ls = ls-files
   ign = ls-files -o -i --exclude-standard
   ff = merge --ff-only
+  mc = merge --no-ff
 
