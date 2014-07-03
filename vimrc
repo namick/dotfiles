@@ -122,7 +122,7 @@ map <leader>v :view %%
 
 " Make the current window big, but leave others context
 set winwidth=7
-set winwidth=80
+set winwidth=100
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
@@ -155,13 +155,13 @@ map <Leader>l :call RunLastSpec()<CR>
 let g:VimuxOrientation = "h"
 
 function! RunAllSpecs()
-  let l:command = "spring rspec"
+  let l:command = "bundle exec rspec"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
-    let l:command = "spring rspec -fd " . @%
+    let l:command = "bundle exec rspec -fd " . @%
     call SetLastSpecCommand(l:command)
     call RunSpecs(l:command)
   elseif InSpecJSFile()
@@ -173,7 +173,9 @@ endfunction
 
 function! RunNearestSpec()
   if InSpecFile()
-    let l:command = "spring rspec -fd " . " -l " . line(".") . " "  . @%
+    " Rspec < 3
+    " let l:command = "bundle exec rspec -fd " . " -l " . line(".") . " "  . @%
+    let l:command = "bundle exec rspec -fd " . @% . ":" . line(".")
     call SetLastSpecCommand(l:command)
     call RunSpecs(l:command)
   endif
@@ -243,3 +245,8 @@ function! s:QuickfixFilenames()
   endfor
   return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
 endfunction
+
+" Load custom configuration if we find it in the working directory
+if filereadable(".vim.custom")
+  so .vim.custom
+endif
