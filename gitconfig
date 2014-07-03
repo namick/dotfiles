@@ -54,4 +54,5 @@
   ign = ls-files -o -i --exclude-standard
   ff = merge --ff-only
   mc = merge --no-ff
+	undo-commit = reset --soft HEAD^
 
