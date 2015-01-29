@@ -1,15 +1,85 @@
 set nocompatible
 
-set shell=/bin/sh
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vundle
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/gmarik/Vundle.vim
+filetype off                  " required
 
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
-endif
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/bundle')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" Languages
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-rails'
+Plugin 'vim-scripts/jQuery'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'jnwhiteh/vim-golang'
+Plugin 'tpope/vim-markdown'
+
+" Colors
+" Plugin 'altercation/vim-colors-solarized'
+" Plugin 'jpo/vim-railscasts-theme'
+" Plugin 'commonthread/vim-vibrantink'
+Plugin 'tpope/vim-vividchalk'
+
+" Tools
+Plugin 'tpope/vim-git'
+Plugin 'wincent/Command-T'
+" Plugin 'mileszs/ack.vim'
+" Plugin 'scrooloose/syntastic'
+Plugin 'bitc/vim-bad-whitespace'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-fugitive'
+Plugin 'christoomey/vim-tmux-navigator'
+
+" Make (V)im play nicely with (i)Term 2 and (t)mux
+"Plugin 'sjl/vitality.vim'
+
+" These three needed for turbux
+"Plugin 'jgdavey/vim-turbux'
+"Plugin 'tpope/vim-dispatch'
+Plugin 'benmills/vimux'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+" filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ^^^^^^^^^
+" End Vundle
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+" set shell=/bin/sh
+
+" Make https://github.com/airblade/vim-gitgutter work with colorscheme
+highlight clear SignColumn
+
+" Source this file after saving it
+" autocmd bufwritepost .vimrc source $MYVIMRC
+" autocmd bufwritepost .vimrc source ~/.vimrc.bundles
 
 syntax on " Enable syntax highlighting
-filetype on " Enable filetype detection
-filetype indent on " Enable filetype-specific indenting
-filetype plugin on " Enable filetype-specific plugins
 set ic " Case insensitive search
 set hls " Highlight search
 set showmatch " Show matching brackets
@@ -23,23 +93,33 @@ set backupdir=/tmp/
 set directory=/tmp/
 set t_Co=256
 "colorscheme vibrantink
-colorscheme railscasts
-"colorscheme vividchalk
+"colorscheme railscasts
+colorscheme vividchalk
 "colorscheme solarized
 
 " Set a dark background after colorscheme is loaded
 set background=dark
 
+" F5 to delete all trailing whitespace.
+" The variable _s is used to save and restore the last search pattern register (so next time the user presses n they will continue their last search), and :nohl is used to switch off search highlighting (so trailing spaces will not be highlighted while the user types). The e flag is used in the substitute command so no error is shown if trailing whitespace is not found. Unlike before, the substitution text must be specified in order to use the required flag.
+nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
 " Show characters over 100 lines
 if exists('+colorcolumn')
-  set colorcolumn=80
+  set colorcolumn=100
 else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>100v.\+', -1)
 endif
 
+" AutoFormat Golang files
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
+
 " Syntax highlighting for all spec files
 autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_behaves_like it_should_behave_like before after setup subject its shared_examples_for shared_context let
 highlight def link rubyRspec Function
+
+" Use the system clipboard as its default register
+set clipboard=unnamed
 
 " Format XML docs
 au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
@@ -60,7 +140,7 @@ autocmd FocusLost * silent! wa
 let mapleader=" "
 
 " Clear the search buffer when hitting return
-:nnoremap <CR> :nohlsearch<cr>
+nnoremap <CR> :nohlsearch<cr>
 
 " Switch between files with leader-leader
 nnoremap <leader><leader> <c-^>
@@ -69,8 +149,8 @@ nnoremap <leader><leader> <c-^>
 " SMASH
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Map smashing j and k to exit insert mode
-inoremap jk <esc>
-inoremap kj <esc>
+" inoremap jk <esc>
+" inoremap kj <esc>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
@@ -80,11 +160,13 @@ inoremap kj <esc>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RELATIVE NUMBER
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set number
 set relativenumber
 
 " Toggle relative number with Ctrl-n
 function! NumberToggle()
   if(&relativenumber == 1)
+    set norelativenumber
     set number
   else
     set relativenumber
@@ -95,18 +177,21 @@ nnoremap <C-n> :call NumberToggle()<cr>
 
 " Switch to absolute line numbers whenever Vim loses focus, since we don’t
 "   really care about the relative line numbers unless we’re moving around
+autocmd FocusLost * :set norelativenumber
 autocmd FocusLost * :set number
 autocmd FocusGained * :set relativenumber
 
-" Use absolute line numbers when we’re in insert mode
-"   and relative numbers when we’re in normal mode
+" " Use absolute line numbers when we’re in insert mode
+" "   and relative numbers when we’re in normal mode
+autocmd InsertEnter * :set norelativenumber
 autocmd InsertEnter * :set number
 autocmd InsertLeave * :set relativenumber
 
-" Highlight cursor line in normal mode
-set cursorline
-autocmd InsertEnter * set nocursorline
-autocmd InsertLeave * set cursorline
+" " Highlight cursor line in normal mode
+" set cursorline
+" autocmd InsertEnter * set nocursorline
+" autocmd InsertLeave * set cursorline
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COMMAND-T MAPPINGS
@@ -121,14 +206,14 @@ map <leader>e :edit %%
 map <leader>v :view %%
 
 " Make the current window big, but leave others context
-set winwidth=7
+" set winwidth=0
 set winwidth=100
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
-set winheight=7
-set winminheight=7
-set winheight=999
+" set winheight=0
+set winminheight=0
+set winheight=9999
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MULTIPURPOSE TAB KEY
@@ -151,34 +236,48 @@ map <Leader>f :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 
+" Golang mappings
+map <Leader>g :call GoRunFile()<CR>
+
 " Open vimux on the side
 let g:VimuxOrientation = "h"
 
+function! GoRunFile()
+  let l:command = "go run " . @%
+  call RunSpecs(l:command)
+endfunction
+
 function! RunAllSpecs()
-  let l:command = "bundle exec rspec"
+  let l:command = "rspec -fd"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
-    let l:command = "bundle exec rspec -fd " . @%
-    call SetLastSpecCommand(l:command)
-    call RunSpecs(l:command)
+    let l:command = "rspec -fd " . @%
+    " let l:command = "bundle exec rspec -fd " . @%
+    " let l:command = "bin/rspec -fd " . @%
   elseif InSpecJSFile()
     let l:command = "spring teaspoon " . @%
-    call SetLastSpecCommand(l:command)
-    call RunSpecs(l:command)
+  elseif InFeatureFile()
+    let l:command = "bin/cucumber " . @%
   endif
+  call SetLastSpecCommand(l:command)
+  call RunSpecs(l:command)
 endfunction
 
 function! RunNearestSpec()
   if InSpecFile()
     " Rspec < 3
     " let l:command = "bundle exec rspec -fd " . " -l " . line(".") . " "  . @%
-    let l:command = "bundle exec rspec -fd " . @% . ":" . line(".")
-    call SetLastSpecCommand(l:command)
-    call RunSpecs(l:command)
+    let l:command = "rspec -fd " . @% . ":" . line(".")
+    " let l:command = "bundle exec rspec -fd " . @% . ":" . line(".")
+    " let l:command = "bin/rspec -fd " . @% . ":" . line(".")
+  elseif InFeatureFile()
+    let l:command = "bin/cucumber " . @% . ":" . line(".")
   endif
+  call SetLastSpecCommand(l:command)
+  call RunSpecs(l:command)
 endfunction
 
 function! RunLastSpec()
@@ -193,6 +292,10 @@ endfunction
 
 function! InSpecJSFile()
   return match(expand("%"), "_spec.js.coffee$") != -1
+endfunction
+
+function! InFeatureFile()
+  return match(expand("%"), ".feature$") != -1
 endfunction
 
 function! SetLastSpecCommand(command)
@@ -213,40 +316,58 @@ endfunction
 
 command! -range=% ChangeHashSyntax call <SID>ChangeHashSyntax(<line1>,<line2>)
 
-command! -nargs=0 -bar Qargs execute 'args ' . s:QuickfixFilenames()
+" command! -nargs=0 -bar Qargs execute 'args ' . s:QuickfixFilenames()
 
-" Contributed by "ib."
-" http://stackoverflow.com/questions/5686206/search-replace-using-quickfix-list-in-vim#comment8286582_5686810
-command! -nargs=1 -complete=command -bang Qdo call s:Qdo(<q-bang>, <q-args>)
+" " Contributed by "ib."
+" " http://stackoverflow.com/questions/5686206/search-replace-using-quickfix-list-in-vim#comment8286582_5686810
+" command! -nargs=1 -complete=command -bang Qdo call s:Qdo(<q-bang>, <q-args>)
 
-function! s:Qdo(bang, command)
-  if exists('w:quickfix_title')
-    let in_quickfix_window = 1
-    cclose
-  else
-    let in_quickfix_window = 0
-  endif
+" function! s:Qdo(bang, command)
+"   if exists('w:quickfix_title')
+"     let in_quickfix_window = 1
+"     cclose
+"   else
+"     let in_quickfix_window = 0
+"   endif
 
-  arglocal
-  exe 'args '.s:QuickfixFilenames()
-  exe 'argdo'.a:bang.' '.a:command
-  argglobal
+"   arglocal
+"   exe 'args '.s:QuickfixFilenames()
+"   exe 'argdo'.a:bang.' '.a:command
+"   argglobal
 
-  if in_quickfix_window
-    copen
-  endif
-endfunction
+"   if in_quickfix_window
+"     copen
+"   endif
+" endfunction
 
-function! s:QuickfixFilenames()
-  " Building a hash ensures we get each buffer only once
-  let buffer_numbers = {}
-  for quickfix_item in getqflist()
-    let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
-  endfor
-  return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
-endfunction
+" function! s:QuickfixFilenames()
+"   " Building a hash ensures we get each buffer only once
+"   let buffer_numbers = {}
+"   for quickfix_item in getqflist()
+"     let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
+"   endfor
+"   return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
+" endfunction
 
 " Load custom configuration if we find it in the working directory
 if filereadable(".vim.custom")
   so .vim.custom
 endif
+
+" Syntastic settings
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+" let g:syntastic_always_populate_loc_list = 0
+" let g:syntastic_auto_loc_list = 0
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+
+" highlight SyntasticError guibg=#2f0000
+
+" let g:syntastic_cursor_column = 1
+" let g:syntastic_echo_current_error = 1
+" let g:syntastic_enable_signs = 0
+
+
