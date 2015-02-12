@@ -28,17 +28,17 @@ Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-vividchalk'
 
 " Tools
-Plugin 'tpope/vim-git'
-Plugin 'wincent/Command-T'
+" Plugin 'wincent/Command-T'
 " Plugin 'mileszs/ack.vim'
 " Plugin 'scrooloose/syntastic'
-Plugin 'bitc/vim-bad-whitespace'
-Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
+Plugin 'bitc/vim-bad-whitespace'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'christoomey/vim-tmux-navigator'
 
 " Make (V)im play nicely with (i)Term 2 and (t)mux
@@ -72,8 +72,6 @@ filetype plugin indent on    " required
 
 " set shell=/bin/sh
 
-" Make https://github.com/airblade/vim-gitgutter work with colorscheme
-highlight clear SignColumn
 
 " Source this file after saving it
 " autocmd bufwritepost .vimrc source $MYVIMRC
@@ -99,6 +97,9 @@ colorscheme vividchalk
 
 " Set a dark background after colorscheme is loaded
 set background=dark
+
+" Make https://github.com/airblade/vim-gitgutter work with colorscheme
+highlight clear SignColumn
 
 " F5 to delete all trailing whitespace.
 " The variable _s is used to save and restore the last search pattern register (so next time the user presses n they will continue their last search), and :nohl is used to switch off search highlighting (so trailing spaces will not be highlighted while the user types). The e flag is used in the substitute command so no error is shown if trailing whitespace is not found. Unlike before, the substitution text must be specified in order to use the required flag.
@@ -248,19 +249,17 @@ function! GoRunFile()
 endfunction
 
 function! RunAllSpecs()
-  let l:command = "rspec -fd"
+  let l:command = "$RSPEC_COMMAND"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
-    let l:command = "rspec -fd " . @%
-    " let l:command = "bundle exec rspec -fd " . @%
-    " let l:command = "bin/rspec -fd " . @%
+    let l:command = "$RSPEC_COMMAND " . @%
   elseif InSpecJSFile()
-    let l:command = "spring teaspoon " . @%
+    let l:command = "$TEASPOON_COMMAND " . @%
   elseif InFeatureFile()
-    let l:command = "bin/cucumber " . @%
+    let l:command = "$CUCUMBER_COMMAND " . @%
   endif
   call SetLastSpecCommand(l:command)
   call RunSpecs(l:command)
@@ -269,12 +268,10 @@ endfunction
 function! RunNearestSpec()
   if InSpecFile()
     " Rspec < 3
-    " let l:command = "bundle exec rspec -fd " . " -l " . line(".") . " "  . @%
-    let l:command = "rspec -fd " . @% . ":" . line(".")
-    " let l:command = "bundle exec rspec -fd " . @% . ":" . line(".")
-    " let l:command = "bin/rspec -fd " . @% . ":" . line(".")
+    " let l:command = "$RSPEC_COMMAND " . " -l " . line(".") . " "  . @%
+    let l:command = "$RSPEC_COMMAND " . @% . ":" . line(".")
   elseif InFeatureFile()
-    let l:command = "bin/cucumber " . @% . ":" . line(".")
+    let l:command = "$CUCUMBER_COMMAND " . @% . ":" . line(".")
   endif
   call SetLastSpecCommand(l:command)
   call RunSpecs(l:command)

@@ -8,7 +8,7 @@
 [core]
   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
   editor=vim
-	excludesfile = /root/.gitignore_global
+	excludesfile = ~/.gitignore
 
 [push]
   default = current
@@ -55,4 +55,4 @@
   ff = merge --ff-only
   mc = merge --no-ff
 	undo-commit = reset --soft HEAD^
-
+	undo = reset --soft HEAD~1
