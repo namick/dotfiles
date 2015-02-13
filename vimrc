@@ -18,8 +18,8 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
 Plugin 'vim-scripts/jQuery'
 Plugin 'kchmck/vim-coffee-script'
-Plugin 'jnwhiteh/vim-golang'
 Plugin 'tpope/vim-markdown'
+Plugin 'fatih/vim-go'
 
 " Colors
 " Plugin 'altercation/vim-colors-solarized'
@@ -112,8 +112,18 @@ else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>100v.\+', -1)
 endif
 
-" AutoFormat Golang files
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
+" Golang stuff
+let g:go_highlight_functions = 1
+let g:go_highlight_methods   = 1
+let g:go_highlight_structs   = 1
+au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+au FileType go nmap <Leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go set commentstring=//\ %s
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 
 " Syntax highlighting for all spec files
 autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_behaves_like it_should_behave_like before after setup subject its shared_examples_for shared_context let
