@@ -25,16 +25,16 @@ create_link 'gemrc' '.gemrc'
 create_link 'tmux.conf' '.tmux.conf'
 create_link 'ackrc' '.ackrc'
 
-create_link 'vim/autoload' '.vim/autoload'
 create_link 'vimrc' '.vimrc'
 mkdir -vp $HOME/.vim/backup
+mkdir -vp $HOME/.vim/bundle
 
-rm -rf $HOME/.vim/bundle
-mkdir $HOME/.vim/bundle
-git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+if [[ ! -d ${HOME}/.vim/bundle/Vundle.vim ]]; then
+  git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+fi
 
-vim +PluginInstall +qall
+vim +PluginInstall! +qall
 
-for bin in bin/*; do
-	create_link "$bin" ".local/${bin}"
-done
+# for bin in bin/*; do
+# 	create_link "$bin" ".local/${bin}"
+# done
