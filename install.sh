@@ -12,7 +12,7 @@ if [[ ! -d ${DOTFILES_PATH}/.git ]]; then
 		exit 1
 	fi
 
-	git clone https://github.com/namick/dotfiles.git "${DOTFILES_PATH}"
+	git clone git@github.com:namick/dotfiles.git "${DOTFILES_PATH}"
 fi
 
 cd "${DOTFILES_PATH}"
