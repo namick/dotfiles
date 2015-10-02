@@ -1,0 +1,41 @@
+.rbenv-version
+.rbenv-vars
+.envrc
+.kateconfig
+*.kate-swp
+.project
+*.lck
+*.bak
+*~
+/.pt
+/.pt.yaml
+
+# KDE Dingleberries
+.directory
+
+# Windows Dingleberries
+Thumbs.db
+
+# Mac OSX dingleberries
+.DS_Store
+.~lock.*
+
+.redcar/
+
+*.sublime-project
+*.sublime-workspace
+
+*.sassc
+
+Notes
+Notes.*
+
+atlassian-ide-plugin.xml
+.idea/
+*.iws
+
+# ctags config file
+.ctags
+.__ctags
+
+*.orig

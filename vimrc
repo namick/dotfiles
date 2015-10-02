@@ -18,8 +18,9 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
 Plugin 'vim-scripts/jQuery'
 Plugin 'kchmck/vim-coffee-script'
-Plugin 'jnwhiteh/vim-golang'
+" Plugin 'jnwhiteh/vim-golang'
 Plugin 'tpope/vim-markdown'
+Plugin 'fatih/vim-go'
 
 " Colors
 " Plugin 'altercation/vim-colors-solarized'
@@ -29,7 +30,7 @@ Plugin 'tpope/vim-vividchalk'
 
 " Tools
 " Plugin 'wincent/Command-T'
-" Plugin 'mileszs/ack.vim'
+Plugin 'mileszs/ack.vim'
 " Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-endwise'
@@ -40,6 +41,8 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'bitc/vim-bad-whitespace'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
 
 " Make (V)im play nicely with (i)Term 2 and (t)mux
 "Plugin 'sjl/vitality.vim'
@@ -113,7 +116,7 @@ else
 endif
 
 " AutoFormat Golang files
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
+" autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 " Syntax highlighting for all spec files
 autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_behaves_like it_should_behave_like before after setup subject its shared_examples_for shared_context let
@@ -140,11 +143,28 @@ autocmd FocusLost * silent! wa
 " Set leader to space
 let mapleader=" "
 
+" Save with leader-w
+nmap <leader>w :w<cr>
+" Explore with leader -e
+nmap <leader>e :Explore<cr>
+
 " Clear the search buffer when hitting return
 nnoremap <CR> :nohlsearch<cr>
 
 " Switch between files with leader-leader
 nnoremap <leader><leader> <c-^>
+
+" Golang stuff
+let g:go_highlight_functions = 1
+let g:go_highlight_methods   = 1
+let g:go_highlight_structs   = 1
+au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+au FileType go nmap <Leader>r <Plug>(go-run)
+autocmd FileType go set commentstring=//\ %s
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " SMASH
@@ -212,8 +232,8 @@ set winwidth=100
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
-" set winheight=0
-set winminheight=0
+set winheight=1
+set winminheight=1
 set winheight=9999
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -249,13 +269,13 @@ function! GoRunFile()
 endfunction
 
 function! RunAllSpecs()
-  let l:command = "$RSPEC_COMMAND"
+  let l:command = "$TEST_COMMAND"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
-    let l:command = "$RSPEC_COMMAND " . @%
+    let l:command = "$TEST_COMMAND " . @%
   elseif InSpecJSFile()
     let l:command = "$TEASPOON_COMMAND " . @%
   elseif InFeatureFile()
@@ -268,8 +288,8 @@ endfunction
 function! RunNearestSpec()
   if InSpecFile()
     " Rspec < 3
-    " let l:command = "$RSPEC_COMMAND " . " -l " . line(".") . " "  . @%
-    let l:command = "$RSPEC_COMMAND " . @% . ":" . line(".")
+    " let l:command = "$TEST_COMMAND " . " -l " . line(".") . " "  . @%
+    let l:command = "$TEST_COMMAND " . @% . ":" . line(".")
   elseif InFeatureFile()
     let l:command = "$CUCUMBER_COMMAND " . @% . ":" . line(".")
   endif
@@ -367,4 +387,39 @@ endif
 " let g:syntastic_echo_current_error = 1
 " let g:syntastic_enable_signs = 0
 
+" install jshint and jscs globally, then install the syntastic vim plugin
 
+  " Syntastic {
+    " let g:syntastic_enable_signs=1
+    " " let g:syntastic_quiet_messages = {'level': 'warnings'}
+    " let g:syntastic_ruby_checkers=['mri']
+    " " let g:syntastic_ruby_checkers=['rubocop']
+    " let g:syntastic_go_checkers=['go']
+    " let g:syntastic_javascript_checkers=['jshint', 'jscs']
+
+    " set statusline=""
+    " set statusline+=%#warningmsg#%{SyntasticStatuslineFlag()}%*
+    " set statusline+=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %p%%
+
+    " let g:syntastic_always_populate_loc_list = 1
+    " let g:syntastic_auto_loc_list = 1
+    " let g:syntastic_check_on_open = 1 " if you're experiencing that Synstastic makes opening files slow, turn this off
+    " let g:syntastic_check_on_wq = 0
+  " }
+
+au FileType javascript noremap <Leader>f :call FormatBuffer()<cr>
+
+" This would ideally be filetype-specific, but it's just for JS right now
+function! FormatBuffer()
+  let l:winview = winsaveview()
+  let l:folding = &foldenable
+  let &foldenable = 0
+
+  try
+    %! js-beautify -f -
+  catch
+  endtry
+
+  let &foldenable = l:folding
+  call winrestview(l:winview)
+endfunction
