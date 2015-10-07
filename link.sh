@@ -4,14 +4,22 @@ set -e -u
 
 DOTFILES_PATH=${DOTFILES_PATH:-"$HOME/.dotfiles"}
 
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+
 function create_link() {
-	[[ -e "$DOTFILES_PATH/$1" ]] || (echo "Source does not exist"; exit 1)
-	echo -n "  ~/$2 : "
+	if [[ ! -e "$DOTFILES_PATH/$1" ]]; then
+	  echo "  $2 ${red}source does not exist${reset}"
+	  return
+	fi
+	echo -n "  $2 "
 	if [[ ! -e "$HOME/$2" ]]; then
 		mkdir -p "$(dirname "$HOME/$2")"
-		ln -sv "$DOTFILES_PATH/$1" "$HOME/$2"
+		ln -sv "$DOTFILES_PATH/$1" "$HOME/$2" > /dev/null
+		echo -e " ${green}created${reset} "
 	else
-		echo "already exists"
+		echo -e " ${green}exists${reset} "
 	fi
 }
 
@@ -43,5 +51,4 @@ if [[ ! -d ${HOME}/.vim/bundle/vim-vividchalk ]]; then
   git clone https://github.com/tpope/vim-vividchalk.git $HOME/.vim/bundle/vim-vividchalk
 fi
 
-vim +PluginInstall +qall
-
+vim -E +PluginInstall +qall
