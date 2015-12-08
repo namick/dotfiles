@@ -1,21 +1,13 @@
 #!/bin/bash
-# vim: set noexpandtab tabstop=4 shiftwidth=0:
 set -e -u
 
-if [[ ${DOTFILES_PATH:-unset} == 'unset' ]]; then
-	export DOTFILES_PATH="$HOME/.dotfiles"
-fi
+apt-get update && apt-get install -y git
 
-if [[ ! -d ${DOTFILES_PATH}/.git ]]; then
-	if [[ -d ${DOTFILES_PATH} ]]; then
-		echo "$DOTFILES_PATH already exists but isn't a git repo. Unsure how to continue."
-		exit 1
-	fi
+export DOTFILES_PATH=${DOTFILES_PATH:-"${HOME}/.dotfiles"}
 
-	git clone git@github.com:namick/dotfiles.git "${DOTFILES_PATH}"
-fi
+git clone https://github.com/namick/dotfiles.git $DOTFILES_PATH
 
-cd "${DOTFILES_PATH}"
+cd $DOTFILES_PATH
 
 ./link.sh
 ./setup.sh
