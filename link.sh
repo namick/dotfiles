@@ -25,6 +25,8 @@ function create_link() {
 
 echo "Installing to $HOME from ${DOTFILES_PATH}..."
 
+create_link 'bash_profile' '.bash_profile'
+
 create_link 'gitconfig' '.gitconfig'
 create_link 'gitignore' '.gitignore'
 
