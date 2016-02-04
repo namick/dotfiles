@@ -1,3 +1,5 @@
+if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+
 # Color
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
@@ -74,7 +76,7 @@ function parse_git_branch() {
 # (http://en.wikipedia.org/wiki/Unicode_symbols)
 symbol="⚡ "
 
-PS1="\[${MAGENTA}\]\u \[$RESET\]in \[$GREEN\]\w\[$RESET\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\n$symbol\[$RESET\]"
+PS1="\[${MAGENTA}\]\u(n8)\[${RESET}\]@\[${ORANGE}\]\h \[$RESET\]in \[$GREEN\]\w\[$RESET\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\n$symbol\[$RESET\]"
 PS2="\[$ORANGE\]→ \[$RESET\]"
 
 ### Misc
@@ -83,9 +85,10 @@ PS2="\[$ORANGE\]→ \[$RESET\]"
 PROMPT_COMMAND='echo -ne "\033]0;${PWD##*/}\007"'
 
 # bash completion installed from brew
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
+if [ -f $(which brew)/etc/bash_completion ]; then
 	. $(brew --prefix)/etc/bash_completion
 fi
 
-
-if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+if command -v direnv >/dev/null 2>&1; then
+	eval "$(direnv hook bash)"
+fi
