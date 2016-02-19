@@ -92,3 +92,11 @@ fi
 if command -v direnv >/dev/null 2>&1; then
 	eval "$(direnv hook bash)"
 fi
+
+# Let tmux pick up a few environment on each new prompt
+if [ -n "$TMUX" ]; then
+  function _refresh_ssh_auth_sock {
+    export $(tmux show-environment | grep "^SSH_AUTH_SOCK")
+  }
+	PROMPT_COMMAND="_refresh_ssh_auth_sock;$PROMPT_COMMAND"
+fi
