@@ -57,13 +57,6 @@ else
 	RESET="\033[m"
 fi
 
-# export MAGENTA
-# export ORANGE
-# export GREEN
-# export PURPLE
-# export BOLD
-# export RESET
-
 # Git branch details
 function parse_git_dirty() {
 	[[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
@@ -93,10 +86,10 @@ if command -v direnv >/dev/null 2>&1; then
 	eval "$(direnv hook bash)"
 fi
 
-# Let tmux pick up a few environment on each new prompt
+# Let tmux pick up ssh_auth_sock on each new prompt
 if [ -n "$TMUX" ]; then
   function _refresh_ssh_auth_sock {
     export $(tmux show-environment | grep "^SSH_AUTH_SOCK")
   }
-	PROMPT_COMMAND="_refresh_ssh_auth_sock;$PROMPT_COMMAND"
+  PROMPT_COMMAND="_refresh_ssh_auth_sock;$PROMPT_COMMAND"
 fi
