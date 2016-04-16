@@ -108,11 +108,11 @@ highlight clear SignColumn
 " The variable _s is used to save and restore the last search pattern register (so next time the user presses n they will continue their last search), and :nohl is used to switch off search highlighting (so trailing spaces will not be highlighted while the user types). The e flag is used in the substitute command so no error is shown if trailing whitespace is not found. Unlike before, the substitution text must be specified in order to use the required flag.
 nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
-" Show characters over 100 lines
+" Show characters over 80 lines
 if exists('+colorcolumn')
-  set colorcolumn=100
+  set colorcolumn=80
 else
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>100v.\+', -1)
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
 
 " AutoFormat Golang files
@@ -228,7 +228,7 @@ map <leader>v :view %%
 
 " Make the current window big, but leave others context
 " set winwidth=0
-set winwidth=100
+set winwidth=82
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
@@ -269,13 +269,13 @@ function! GoRunFile()
 endfunction
 
 function! RunAllSpecs()
-  let l:command = "$TEST_COMMAND"
+  let l:command = "bin/rake --trace"
   call RunSpecs(l:command)
 endfunction
 
 function! RunCurrentSpecFile()
   if InSpecFile()
-    let l:command = "$TEST_COMMAND " . @%
+    let l:command = "bin/rspec " . @%
   elseif InSpecJSFile()
     let l:command = "$TEASPOON_COMMAND " . @%
   elseif InFeatureFile()
@@ -289,7 +289,7 @@ function! RunNearestSpec()
   if InSpecFile()
     " Rspec < 3
     " let l:command = "$TEST_COMMAND " . " -l " . line(".") . " "  . @%
-    let l:command = "$TEST_COMMAND " . @% . ":" . line(".")
+    let l:command = "bin/rspec " . @% . ":" . line(".")
   elseif InFeatureFile()
     let l:command = "$CUCUMBER_COMMAND " . @% . ":" . line(".")
   endif

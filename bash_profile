@@ -24,6 +24,9 @@ alias sudo='sudo '
 # You must install Pygments first - "sudo easy_install Pygments"
 alias c='pygmentize -O style=monokai -f console256 -g'
 
+# Docker
+alias dc='docker-compose'
+
 ### Prompt Colors
 # Modified version of @gf3’s Sexy Bash Prompt
 # (https://github.com/gf3/dotfiles)
