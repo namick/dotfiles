@@ -39,3 +39,5 @@ atlassian-ide-plugin.xml
 .__ctags
 
 *.orig
+
+Session.vim
