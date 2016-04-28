@@ -233,7 +233,7 @@ set winwidth=82
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
 set winheight=1
-set winminheight=1
+set winminheight=0
 set winheight=9999
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
