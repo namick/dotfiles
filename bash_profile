@@ -116,3 +116,5 @@ _complete_ssh_hosts ()
 	return 0
 }
 complete -F _complete_ssh_hosts ssh
+complete -F _complete_ssh_hosts rsync
+complete -F _complete_ssh_hosts scp
