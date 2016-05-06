@@ -5,7 +5,10 @@ export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 
 # Color LS
-colorflag="-G"
+colorflag="--color"
+if [[ "$(uname)" == "Darwin" ]]; then
+  colorflag="-G"
+fi
 alias ls="command ls ${colorflag}"
 alias l="ls -lF ${colorflag}" # all files, in long format
 alias la="ls -laF ${colorflag}" # all files inc dotfiles, in long format
@@ -20,9 +23,11 @@ alias .....="cd ../../../.."
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
-# Colored up cat!
-# You must install Pygments first - "sudo easy_install Pygments"
-alias c='pygmentize -O style=monokai -f console256 -g'
+# Colored up cat! (apt-get instal python-pygments)
+alias ccat='pygmentize -O style=monokai -f console256 -g'
+
+# Color diff (apt-get install colordiff)
+alias cdiff='colordiff -u'
 
 # Docker
 alias dc='docker-compose'
