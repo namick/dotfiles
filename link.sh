@@ -1,5 +1,5 @@
 #!/bin/bash
-# vim: set noexpandtab tabstop=4 shiftwidth=0:
+
 set -e -u
 
 DOTFILES_PATH=${DOTFILES_PATH:-"$HOME/.dotfiles"}
@@ -9,18 +9,18 @@ green=`tput setaf 2`
 reset=`tput sgr0`
 
 function create_link() {
-	if [[ ! -e "$DOTFILES_PATH/$1" ]]; then
-	  echo "  $2 ${red}source does not exist${reset}"
-	  return
-	fi
-	echo -n "  $2 "
-	if [[ ! -e "$HOME/$2" ]]; then
-		mkdir -p "$(dirname "$HOME/$2")"
-		ln -sv "$DOTFILES_PATH/$1" "$HOME/$2" > /dev/null
-		echo -e " ${green}created${reset} "
-	else
-		echo -e " ${green}exists${reset} "
-	fi
+  if [[ ! -e "$DOTFILES_PATH/$1" ]]; then
+    echo "  $2 ${red}source does not exist${reset}"
+    return
+  fi
+  echo -n "  $2 "
+  if [[ ! -e "$HOME/$2" ]]; then
+    mkdir -p "$(dirname "$HOME/$2")"
+    ln -sv "$DOTFILES_PATH/$1" "$HOME/$2" > /dev/null
+    echo -e " ${green}created${reset} "
+  else
+    echo -e " ${green}exists${reset} "
+  fi
 }
 
 echo "Installing to $HOME from ${DOTFILES_PATH}..."
@@ -29,6 +29,7 @@ create_link 'bash_profile' '.bash_profile'
 
 create_link 'gitconfig' '.gitconfig'
 create_link 'gitignore' '.gitignore'
+create_link 'git-completion.bash' '.git-completion.bash'
 
 create_link 'gemrc' '.gemrc'
 
