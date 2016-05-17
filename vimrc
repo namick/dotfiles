@@ -228,12 +228,12 @@ map <leader>v :view %%
 
 " Make the current window big, but leave others context
 " set winwidth=0
-set winwidth=82
+set winwidth=84
 " We have to have a winheight bigger than we want to set winminheight. But if
 " we set winheight to be huge before winminheight, the winminheight set will
 " fail.
-set winheight=1
-set winminheight=0
+set winheight=5
+set winminheight=4
 set winheight=9999
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
